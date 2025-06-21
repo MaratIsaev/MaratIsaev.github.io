@@ -13,8 +13,7 @@
 
 <!-- Starting an immersive WebXR session requires user interaction.
     We start this one with a simple button. -->
-<button onclick="activateXR()">Start Hello WebXR 111</button>
-  <p id="log">here</p>
+<button onclick="activateXR()">Start Hello WebXR</button>
 <script>
 async function activateXR() {
   // Add a canvas element and initialize a WebGL context that is compatible with WebXR.
@@ -30,6 +29,7 @@ const renderer = new THREE.WebGLRenderer({
   context: gl
 });
 renderer.autoClear = false;
+renderer.setSize(window.innerWidth, window.innerHeight);
 
 // The API directly updates the camera matrices.
 // Disable matrix auto updates so three.js doesn't attempt
