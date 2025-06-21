@@ -58,6 +58,7 @@ const onXRFrame = (time, frame) => {
   // XRFrame.getViewerPose can return null while the session attempts to establish tracking.
   const pose = frame.getViewerPose(referenceSpace);
   if (pose) {
+    window.alert('pose');
     // In mobile AR, we only have one view.
     const view = pose.views[0];
 
