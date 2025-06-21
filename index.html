@@ -10,6 +10,7 @@
   <p>Долгота: <span id="longitude">-</span></p>
   <p>Широта: <span id="latitude">-</span></p>
   <p>Точность: <span id="accuracy">-</span></p>
+  <p id="places"></p>
   <!-- three.js -->
   <script src="https://unpkg.com/three@0.126.0/build/three.js"></script>
 </head>
@@ -18,7 +19,7 @@
 <!-- Starting an immersive WebXR session requires user interaction.
     We start this one with a simple button. -->
 <button onclick="activateXR()">Start Demo WebXR</button>
-<button onclick="activateGeolocation()">Start Demo Geolocation</button>
+<button onclick="activateGeolocation()">Start Demo Geolocation 2</button>
 <script>
   // Add a canvas element and initialize a WebGL context that is compatible with WebXR.
   const canvas = document.querySelector("canvas");
@@ -52,6 +53,7 @@ function activateGeolocation() {
     // Простейшая проекция (1° ≈ 1 единица в Three.js)
     const x = (longitude - userGPS.longitude) * 100;
     const z = (latitude - userGPS.latitude) * 100;
+    document.getElementById("places").textContent += ", " + x + ":" + z;
     return { x, z };
   }
 
@@ -100,6 +102,7 @@ function activateGeolocation() {
   addObjectAtGPS(53.921669, 27.619809);
   addObjectAtGPS(53.921524, 27.621922);
   addObjectAtGPS(53.924112, 27.623161);
+  addObjectAtGPS(53.924269, 27.624503);
 }
   
 async function activateXR() {
