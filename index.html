@@ -1,11 +1,16 @@
 <!doctype html>
 <html>
 <head>
+  <style>
+    canvas {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
   <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <title>Hello WebXR!</title>
 
+  <canvas></canvas>
   <!-- three.js -->
   <script src="https://unpkg.com/three@0.126.0/build/three.js"></script>
 </head>
@@ -13,12 +18,11 @@
 
 <!-- Starting an immersive WebXR session requires user interaction.
     We start this one with a simple button. -->
-<button onclick="activateXR()">Start Hello WebXR</button>
+<button onclick="activateXR()">Start Hello WebXR 0</button>
 <script>
 async function activateXR() {
   // Add a canvas element and initialize a WebGL context that is compatible with WebXR.
-  const canvas = document.createElement("canvas");
-  document.body.appendChild(canvas);
+  const canvas = document.querySelector("canvas");
   const gl = canvas.getContext("webgl", {xrCompatible: true});
 
   // Set up the WebGLRenderer, which handles rendering to the session's base layer.
@@ -29,7 +33,6 @@ const renderer = new THREE.WebGLRenderer({
   context: gl
 });
 renderer.autoClear = false;
-renderer.setSize(window.innerWidth, window.innerHeight);
 
 // The API directly updates the camera matrices.
 // Disable matrix auto updates so three.js doesn't attempt
