@@ -19,7 +19,7 @@
 
 <!-- Starting an immersive WebXR session requires user interaction.
     We start this one with a simple button. -->
-<button onclick="activateXR()">Start Hello WebXR</button>
+<button onclick="activateXR()">Start Demo WebXR</button>
 <script>
 async function activateXR() {
   // Add a canvas element and initialize a WebGL context that is compatible with WebXR.
@@ -42,21 +42,6 @@ const camera = new THREE.PerspectiveCamera();
 camera.matrixAutoUpdate = false;
 
 const scene = new THREE.Scene();
-
-// The cube will have a different color on each side.
-const materials = [
-  new THREE.MeshBasicMaterial({color: 0xff0000}),
-  new THREE.MeshBasicMaterial({color: 0x0000ff}),
-  new THREE.MeshBasicMaterial({color: 0x00ff00}),
-  new THREE.MeshBasicMaterial({color: 0xff00ff}),
-  new THREE.MeshBasicMaterial({color: 0x00ffff}),
-  new THREE.MeshBasicMaterial({color: 0xffff00})
-];
-
-// Create the cube and add it to the demo scene.
-const cube = new THREE.Mesh(new THREE.BoxBufferGeometry(0.2, 0.2, 0.2), materials);
-cube.position.set(1, 1, 1);
-scene.add(cube);
 
 // Initialize a WebXR session using "immersive-ar".
 const session = await navigator.xr.requestSession("immersive-ar");
@@ -97,6 +82,60 @@ const onXRFrame = (time, frame) => {
   }
 }
 session.requestAnimationFrame(onXRFrame);
+
+  // Получение геопозиции пользователя
+  const userGPS = { longitude: 0, latitude: 0 };
+  // Объекты на сцене (храним их GPS-координаты)
+  const placedObjects = [];
+  // Функция для преобразования GPS в координаты Three.js (упрощённо)
+  function gpsToPosition(longitude, latitude) {
+    // Простейшая проекция (1° ≈ 1 единица в Three.js)
+    const x = (longitude - userGPS.longitude) * 100;
+    const z = (latitude - userGPS.latitude) * 100;
+    return { x, z };
+  }
+
+  // Добавление объекта в сцену по GPS
+    function addObjectAtGPS(longitude, latitude) {
+      const position = gpsToPosition(longitude, latitude);
+      // The cube will have a different color on each side.
+      const materials = [
+        new THREE.MeshBasicMaterial({color: 0xff0000}),
+        new THREE.MeshBasicMaterial({color: 0x0000ff}),
+        new THREE.MeshBasicMaterial({color: 0x00ff00}),
+        new THREE.MeshBasicMaterial({color: 0xff00ff}),
+        new THREE.MeshBasicMaterial({color: 0x00ffff}),
+        new THREE.MeshBasicMaterial({color: 0xffff00})
+      ];
+
+      // Create the cube and add it to the demo scene.
+      const cube = new THREE.Mesh(new THREE.BoxBufferGeometry(0.2, 0.2, 0.2), materials);
+      cube.position.set(position.x, 0.5, position.z);
+      scene.add(cube);
+      placedObjects.push({ object: cube, longitude, latitude });
+    }
+        if ("geolocation" in navigator) {
+            navigator.geolocation.watchPosition(
+                (position) => {
+                    userGPS.longitude = position.coords.longitude.toFixed(6);
+                    userGPS.latitude = position.coords.latitude.toFixed(6);
+
+                    // Обновляем позицию объектов при движении
+                    placedObjects.forEach(obj => {
+                        const newPos = gpsToPosition(obj.longitude, obj.latitude);
+                        obj.object.position.set(newPos.x, 0.5, newPos.z);
+                    });
+                },
+                (error) => {
+                    console.error("Ошибка геолокации:", error);
+                    document.getElementById("location").textContent = "ошибка" + " " + error.message;
+                },
+                { enableHighAccuracy: true }
+            );
+        } else {
+            alert("Геолокация не поддерживается вашим браузером!");
+        }
+  addObjectAtGPS(53.92413391856367, 27.623117052658376)ж
 }
 </script>
 </body>
