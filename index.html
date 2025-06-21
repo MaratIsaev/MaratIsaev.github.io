@@ -8,6 +8,7 @@
     }
   </style>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hello WebXR!</title>
 
   <canvas></canvas>
@@ -18,12 +19,12 @@
 
 <!-- Starting an immersive WebXR session requires user interaction.
     We start this one with a simple button. -->
-<button onclick="activateXR()">Start Hello WebXR 01</button>
+<button onclick="activateXR()">Start Hello WebXR 012</button>
 <script>
 async function activateXR() {
   // Add a canvas element and initialize a WebGL context that is compatible with WebXR.
   const canvas = document.querySelector("canvas");
-  const gl = canvas.getContext("webgl", {xrCompatible: true});
+  const gl = canvas.getContext("webgl");
 
   // Set up the WebGLRenderer, which handles rendering to the session's base layer.
 const renderer = new THREE.WebGLRenderer({
