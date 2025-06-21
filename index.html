@@ -19,7 +19,7 @@
 
 <!-- Starting an immersive WebXR session requires user interaction.
     We start this one with a simple button. -->
-<button onclick="activateXR()">Start Demo WebXR 2</button>
+<button onclick="activateXR()">Start Demo WebXR 3</button>
 <script>
 async function activateXR() {
   // Add a canvas element and initialize a WebGL context that is compatible with WebXR.
@@ -84,7 +84,7 @@ session.requestAnimationFrame(onXRFrame);
 
   // Получение геопозиции пользователя
   // const userGPS = { longitude: 0, latitude: 0 };
-  const userGPS = { longitude: 53.92424447884986, latitude: 27.624452792752095 };
+  const userGPS = { longitude: 53.921424, latitude: 27.622937 };
   // Объекты на сцене (храним их GPS-координаты)
   const placedObjects = [];
   // Функция для преобразования GPS в координаты Three.js (упрощённо)
@@ -117,11 +117,8 @@ session.requestAnimationFrame(onXRFrame);
         if ("geolocation" in navigator) {
             navigator.geolocation.watchPosition(
                 (position) => {
-                    // userGPS.longitude = position.coords.longitude.toFixed(6);
-                    // userGPS.latitude = position.coords.latitude.toFixed(6);
-                  userGPS.longitude = 53.92424447884986;
-                  userGPS.latitude = 27.624452792752095;
-
+                    userGPS.longitude = position.coords.longitude.toFixed(6);
+                    userGPS.latitude = position.coords.latitude.toFixed(6);
                     // Обновляем позицию объектов при движении
                     placedObjects.forEach(obj => {
                         const newPos = gpsToPosition(obj.longitude, obj.latitude);
@@ -129,15 +126,16 @@ session.requestAnimationFrame(onXRFrame);
                     });
                 },
                 (error) => {
-                    console.error("Ошибка геолокации:", error);
-                    document.getElementById("location").textContent = "ошибка" + " " + error.message;
+                    alert("Ошибка геолокации:");
                 },
                 { enableHighAccuracy: true }
             );
         } else {
             alert("Геолокация не поддерживается вашим браузером!");
         }
-  addObjectAtGPS(53.92413391856367, 27.623117052658376)
+  addObjectAtGPS(53.921895, 27.617056);
+  addObjectAtGPS(53.921669, 27.619809);
+  addObjectAtGPS(53.921524, 27.621922);
 }
 </script>
 </body>
