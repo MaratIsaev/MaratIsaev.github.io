@@ -69,8 +69,7 @@ const onXRFrame = (time, frame) => {
     const view = pose.views[0];
 
     const viewport = session.renderState.baseLayer.getViewport(view);
-    renderer.setSize(viewport.width, viewport.height)
-    // window.alert(`${canvas.width}, ${canvas.height}: ${viewport.width}, ${viewport.height}`);
+    renderer.setSize(viewport.width, viewport.height);
 
     // Use the view's transform matrix and projection matrix to configure the THREE.camera.
     camera.matrix.fromArray(view.transform.matrix)
@@ -84,7 +83,8 @@ const onXRFrame = (time, frame) => {
 session.requestAnimationFrame(onXRFrame);
 
   // Получение геопозиции пользователя
-  const userGPS = { longitude: 0, latitude: 0 };
+  // const userGPS = { longitude: 0, latitude: 0 };
+  const userGPS = { longitude: 53.92424447884986, latitude: 27.624452792752095 };
   // Объекты на сцене (храним их GPS-координаты)
   const placedObjects = [];
   // Функция для преобразования GPS в координаты Three.js (упрощённо)
@@ -117,8 +117,10 @@ session.requestAnimationFrame(onXRFrame);
         if ("geolocation" in navigator) {
             navigator.geolocation.watchPosition(
                 (position) => {
-                    userGPS.longitude = position.coords.longitude.toFixed(6);
-                    userGPS.latitude = position.coords.latitude.toFixed(6);
+                    // userGPS.longitude = position.coords.longitude.toFixed(6);
+                    // userGPS.latitude = position.coords.latitude.toFixed(6);
+                  userGPS.longitude = 53.92424447884986;
+                  userGPS.latitude = 27.624452792752095;
 
                     // Обновляем позицию объектов при движении
                     placedObjects.forEach(obj => {
