@@ -19,7 +19,7 @@
 <!-- Starting an immersive WebXR session requires user interaction.
     We start this one with a simple button. -->
 <button onclick="activateXR()">Start Demo WebXR</button>
-<button onclick="activateGeolocation()">Start Demo Geolocation 1</button>
+<button onclick="activateGeolocation()">Start Demo Geolocation 2</button>
 
   <div id="stabilization"></div>
 <script>
@@ -42,7 +42,9 @@ renderer.autoClear = false;
 const camera = new THREE.PerspectiveCamera();
 camera.matrixAutoUpdate = false;
 
-const reticle = new Reticle();
+  const _geometry = new THREE.BoxGeometry(1, 1, 1);
+  const _material = new THREE.MeshStandardMaterial({ color: Math.random() * 0xffffff });
+  const reticle = new THREE.Mesh(_geometry, _material);
 
 const scene = new THREE.Scene();
 
