@@ -19,7 +19,7 @@
 <!-- Starting an immersive WebXR session requires user interaction.
     We start this one with a simple button. -->
 <button onclick="activateXR()">Start Demo WebXR</button>
-<button onclick="activateGeolocation()">Start Demo Geolocation</button>
+<button onclick="activateGeolocation()">Start Demo Geolocation 2</button>
 <script>
   // Add a canvas element and initialize a WebGL context that is compatible with WebXR.
   const canvas = document.querySelector("canvas");
@@ -121,8 +121,6 @@ session.updateRenderState({
 // near the viewer's position at the time the session was created.
 const localReferenceSpace = await session.requestReferenceSpace('local');
 
-const unboundedReferenceSpace = await session.requestReferenceSpace('unbounded').catch(alert);
-
 // Create another XRReferenceSpace that has the viewer as the origin.
 const viewerSpace = await session.requestReferenceSpace("viewer");
 // Perform hit testing using the viewer as origin.
@@ -138,7 +136,7 @@ const onXRFrame = (time, frame) => {
 
   // Retrieve the pose of the device.
   // XRFrame.getViewerPose can return null while the session attempts to establish tracking.
-  const pose = frame.getViewerPose(unboundedReferenceSpace); // ???
+  const pose = frame.getViewerPose(viewerSpace); // ???
   if (pose) {
     // In mobile AR, we only have one view.
     const view = pose.views[0];
