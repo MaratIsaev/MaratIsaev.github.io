@@ -123,7 +123,7 @@ const localReferenceSpace = await session.requestReferenceSpace('local', {
   domOverlay: {
     root: document.getElementById("overlay"),
   },
-}));
+});
 
 // Create another XRReferenceSpace that has the viewer as the origin.
 const viewerSpace = await session.requestReferenceSpace("viewer");
