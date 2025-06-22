@@ -42,13 +42,7 @@ renderer.autoClear = false;
 const camera = new THREE.PerspectiveCamera();
 camera.matrixAutoUpdate = false;
 
-  const _geometry = new THREE.BoxGeometry(1, 1, 1);
-  const _material = new THREE.MeshStandardMaterial({ color: Math.random() * 0xffffff });
-  const reticle = new THREE.Mesh(_geometry, _material);
-
 const scene = new THREE.Scene();
-
-scene.add(reticle);
 
 function activateGeolocation() {
   // Получение геопозиции пользователя
@@ -108,6 +102,8 @@ function activateGeolocation() {
         } else {
             alert("Геолокация не поддерживается вашим браузером!");
         }
+
+  addObjectAtGPS(27.621920, 53.921524);
 }
   
 async function activateXR() {
@@ -128,23 +124,9 @@ const localReferenceSpace = await session.requestReferenceSpace('local');
 const viewerSpace = await session.requestReferenceSpace("viewer");
 // Perform hit testing using the viewer as origin.
 const hitTestSource = await session.requestHitTestSource({ space: viewerSpace });
-let stabilized;
+
 // Create a render loop that allows us to draw on the AR view.
 const onXRFrame = (time, frame) => {
-  camera.updateMatrixWorld(true);
-  const hitTestResults = frame.getHitTestResults(hitTestSource);
-  if (!stabilized && hitTestResults.length > 0) {
-    stabilized = true;
-    document.body.classList.add("stabilized");
-  }
-  if (hitTestResults.length > 0) {
-    const hitPose = hitTestResults[0].getPose(localReferenceSpace);
-
-    // update the reticle position
-    reticle.visible = true;
-    reticle.position.set(hitPose.transform.position.x, hitPose.transform.position.y, hitPose.transform.position.z)
-    reticle.updateMatrixWorld(true);
-  }
   // Queue up the next draw request.
   session.requestAnimationFrame(onXRFrame);
 
@@ -153,8 +135,7 @@ const onXRFrame = (time, frame) => {
 
   // Retrieve the pose of the device.
   // XRFrame.getViewerPose can return null while the session attempts to establish tracking.
-  return;
-  const pose = frame.getViewerPose(localReferenceSpace); // ???
+  const pose = frame.getViewerPose(viewerSpace); // ???
   if (pose) {
     // In mobile AR, we only have one view.
     const view = pose.views[0];
@@ -172,8 +153,6 @@ const onXRFrame = (time, frame) => {
   }
 }
 session.requestAnimationFrame(onXRFrame);
-
-  addObjectAtGPS(27.621920, 53.921524);
 }
 </script>
 </body>
