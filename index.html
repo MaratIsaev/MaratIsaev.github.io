@@ -28,7 +28,7 @@
 <!-- Starting an immersive WebXR session requires user interaction.
     We start this one with a simple button. -->
 <button onclick="activateXR()">Start Demo WebXR</button>
-<button onclick="activateGeolocation()">Start Demo Geolocation 2</button>
+<button onclick="activateGeolocation()">Start Demo Geolocation 3</button>
 <script>
   // Add a canvas element and initialize a WebGL context that is compatible with WebXR.
   const canvas = document.querySelector("canvas");
@@ -83,7 +83,7 @@ function activateGeolocation() {
       // Create the cube and add it to the demo scene.
       const cube = new THREE.Mesh(new THREE.BoxBufferGeometry(0.2, 0.2, 0.2), materials);
       // cube.position.set(position.x, 0, position.z);
-      cube.position.set(0, 0, 1);
+      cube.position.set(0, 0, -2);
       scene.add(cube);
       placedObjects.push({ object: cube, longitude, latitude });
     }
