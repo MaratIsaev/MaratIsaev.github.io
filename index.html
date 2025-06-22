@@ -19,7 +19,7 @@
 <!-- Starting an immersive WebXR session requires user interaction.
     We start this one with a simple button. -->
 <button onclick="activateXR()">Start Demo WebXR</button>
-<button onclick="activateGeolocation()">Start Demo Geolocation</button>
+<button onclick="activateGeolocation()">Start Demo Geolocation 1</button>
 <script>
   // Add a canvas element and initialize a WebGL context that is compatible with WebXR.
   const canvas = document.querySelector("canvas");
@@ -109,10 +109,7 @@ function activateGeolocation() {
   
 async function activateXR() {
 // Initialize a WebXR session using "immersive-ar".
-const session = await navigator.xr.requestSession("immersive-vr", {
-  requiredFeatures: ["hit-test", "dom-overlay"],
-  domOverlay: { root: document.body },
-});
+const session = await navigator.xr.requestSession("immersive-vr");
 session.updateRenderState({
   baseLayer: new XRWebGLLayer(session, gl)
 });
