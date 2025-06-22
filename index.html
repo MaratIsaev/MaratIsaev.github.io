@@ -19,9 +19,7 @@
 <!-- Starting an immersive WebXR session requires user interaction.
     We start this one with a simple button. -->
 <button onclick="activateXR()">Start Demo WebXR</button>
-<button onclick="activateGeolocation()">Start Demo Geolocation 2</button>
-
-  <div id="stabilization"></div>
+<button onclick="activateGeolocation()">Start Demo Geolocation 3</button>
 <script>
   // Add a canvas element and initialize a WebGL context that is compatible with WebXR.
   const canvas = document.querySelector("canvas");
@@ -46,7 +44,8 @@ const scene = new THREE.Scene();
 
 function activateGeolocation() {
   // Получение геопозиции пользователя
-  const userGPS = { longitude: 27.622937, latitude: 53.921424 };
+  // const userGPS = { longitude: 27.622937, latitude: 53.921424 };
+  const userGPS = { longitude: 0, latitude: 0 };
   // Объекты на сцене (храним их GPS-координаты)
   const placedObjects = [];
   // Функция для преобразования GPS в координаты Three.js (упрощённо)
@@ -73,8 +72,9 @@ function activateGeolocation() {
       ];
 
       // Create the cube and add it to the demo scene.
-      const cube = new THREE.Mesh(new THREE.BoxBufferGeometry(1, 1, 1), materials);
-      cube.position.set(position.x, 0, position.z);
+      const cube = new THREE.Mesh(new THREE.BoxBufferGeometry(0.2, 0.2, 0.2), materials);
+      // cube.position.set(position.x, 0, position.z);
+      cube.position.set(1, 0, 1);
       scene.add(cube);
       placedObjects.push({ object: cube, longitude, latitude });
     }
