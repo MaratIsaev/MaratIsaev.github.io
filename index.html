@@ -1,13 +1,6 @@
 <!doctype html>
 <html>
 <head>
-  <style>
-    #overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-    }
-  </style>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Demo WebXR</title>
@@ -28,7 +21,7 @@
 <!-- Starting an immersive WebXR session requires user interaction.
     We start this one with a simple button. -->
 <button onclick="activateXR()">Start Demo WebXR</button>
-<button onclick="activateGeolocation()">Start Demo Geolocation 2</button>
+<button onclick="activateGeolocation()">Start Demo Geolocation</button>
 <script>
   // Add a canvas element and initialize a WebGL context that is compatible with WebXR.
   const canvas = document.querySelector("canvas");
@@ -83,7 +76,7 @@ function activateGeolocation() {
       // Create the cube and add it to the demo scene.
       const cube = new THREE.Mesh(new THREE.BoxBufferGeometry(0.2, 0.2, 0.2), materials);
       // cube.position.set(position.x, 0, position.z);
-      cube.position.set(0, 0, -2);
+      cube.position.set(0, 0, -1.5);
       scene.add(cube);
       placedObjects.push({ object: cube, longitude, latitude });
     }
@@ -145,8 +138,9 @@ const onXRFrame = (time, frame) => {
 
   // Retrieve the pose of the device.
   // XRFrame.getViewerPose can return null while the session attempts to establish tracking.
-  const pose = frame.getViewerPose(localReferenceSpace); // ???
+  const pose = frame.getViewerPose(viewerSpace); // ???
   if (pose) {
+    alert(pose.views.length);
     // In mobile AR, we only have one view.
     const view = pose.views[0];
 
