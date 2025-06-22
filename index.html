@@ -19,7 +19,7 @@
 <!-- Starting an immersive WebXR session requires user interaction.
     We start this one with a simple button. -->
 <button onclick="activateXR()">Start Demo WebXR</button>
-<button onclick="activateGeolocation()">Start Demo Geolocation!!!</button>
+<button onclick="activateGeolocation()">Start Demo Geolocation</button>
 <script>
   // Add a canvas element and initialize a WebGL context that is compatible with WebXR.
   const canvas = document.querySelector("canvas");
@@ -44,8 +44,8 @@ const scene = new THREE.Scene();
 
 function activateGeolocation() {
   // Получение геопозиции пользователя
-  // const userGPS = { longitude: 0, latitude: 0 };
-  const userGPS = { longitude: 53.921424, latitude: 27.622937 };
+  const userGPS = { longitude: 0, latitude: 0 };
+  // const userGPS = { longitude: 27.622937, latitude: 53.921424 };
   // Объекты на сцене (храним их GPS-координаты)
   const placedObjects = [];
   // Функция для преобразования GPS в координаты Three.js (упрощённо)
@@ -72,14 +72,16 @@ function activateGeolocation() {
       ];
 
       // Create the cube and add it to the demo scene.
-      const cube = new THREE.Mesh(new THREE.BoxBufferGeometry(0.2, 0.2, 0.2), materials);
-      cube.position.set(position.x, 0.5, position.z);
+      const cube = new THREE.Mesh(new THREE.BoxBufferGeometry(1, 1, 1), materials);
+      // cube.position.set(position.x, 0, position.z);
+      cube.position.set(5, 0, 5);
       scene.add(cube);
       placedObjects.push({ object: cube, longitude, latitude });
     }
         if ("geolocation" in navigator) {
             navigator.geolocation.watchPosition(
                 (position) => {
+                  return;
                     document.getElementById("places").textContent = "";
                   
                     userGPS.longitude = position.coords.longitude.toFixed(6);
@@ -90,7 +92,7 @@ function activateGeolocation() {
                     // Обновляем позицию объектов при движении
                     placedObjects.forEach(obj => {
                         const newPos = gpsToPosition(obj.longitude, obj.latitude);
-                        obj.object.position.set(newPos.x, 0.5, newPos.z);
+                        obj.object.position.set(newPos.x, 0, newPos.z);
                     });
                 },
                 (error) => {
@@ -101,11 +103,6 @@ function activateGeolocation() {
         } else {
             alert("Геолокация не поддерживается вашим браузером!");
         }
-  addObjectAtGPS(27.617056, 53.921895);
-  addObjectAtGPS(27.619809, 53.921669);
-  addObjectAtGPS(27.621922, 53.921524);
-  addObjectAtGPS(27.623161, 53.924112);
-  addObjectAtGPS(27.624503, 53.924269);
 }
   
 async function activateXR() {
@@ -147,6 +144,8 @@ const onXRFrame = (time, frame) => {
   }
 }
 session.requestAnimationFrame(onXRFrame);
+
+  addObjectAtGPS(27.622937, 53.921424);
 }
 </script>
 </body>
