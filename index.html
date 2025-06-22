@@ -19,7 +19,7 @@
 <!-- Starting an immersive WebXR session requires user interaction.
     We start this one with a simple button. -->
 <button onclick="activateXR()">Start Demo WebXR</button>
-<button onclick="activateGeolocation()">Start Demo Geolocation</button>
+<button onclick="activateGeolocation()">Start Demo Geolocation 1</button>
 
   <div id="stabilization"></div>
 <script>
@@ -85,7 +85,6 @@ function activateGeolocation() {
         if ("geolocation" in navigator) {
             navigator.geolocation.watchPosition(
                 (position) => {
-                  return;
                     document.getElementById("places").textContent = "";
                   
                     userGPS.longitude = position.coords.longitude.toFixed(6);
@@ -127,13 +126,13 @@ const localReferenceSpace = await session.requestReferenceSpace('local');
 const viewerSpace = await session.requestReferenceSpace("viewer");
 // Perform hit testing using the viewer as origin.
 const hitTestSource = await session.requestHitTestSource({ space: viewerSpace });
-
+let stabilized;
 // Create a render loop that allows us to draw on the AR view.
 const onXRFrame = (time, frame) => {
   camera.updateMatrixWorld(true);
   const hitTestResults = frame.getHitTestResults(hitTestSource);
-  if (!this.stabilized && hitTestResults.length > 0) {
-    this.stabilized = true;
+  if (!stabilized && hitTestResults.length > 0) {
+    stabilized = true;
     document.body.classList.add("stabilized");
   }
   if (hitTestResults.length > 0) {
@@ -152,6 +151,7 @@ const onXRFrame = (time, frame) => {
 
   // Retrieve the pose of the device.
   // XRFrame.getViewerPose can return null while the session attempts to establish tracking.
+  return;
   const pose = frame.getViewerPose(localReferenceSpace); // ???
   if (pose) {
     // In mobile AR, we only have one view.
