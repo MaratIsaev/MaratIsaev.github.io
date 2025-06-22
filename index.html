@@ -145,14 +145,15 @@ const onXRFrame = (time, frame) => {
 
     const viewport = session.renderState.baseLayer.getViewport(view);
     renderer.setSize(viewport.width, viewport.height);
-alert(view.transform.matrix);
+    document.getElementById("places").textContent = "" + view.transform.matrix;
+
     // Use the view's transform matrix and projection matrix to configure the THREE.camera.
     camera.matrix.fromArray(view.transform.matrix)
     camera.projectionMatrix.fromArray(view.projectionMatrix);
     camera.updateMatrixWorld(true);
 
     // Render the scene with THREE.WebGLRenderer.
-    renderer.render(scene, camera)
+    // renderer.render(scene, camera)
   }
 }
 session.requestAnimationFrame(onXRFrame);
