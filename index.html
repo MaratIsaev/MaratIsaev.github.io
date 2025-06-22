@@ -18,8 +18,10 @@
 
 <!-- Starting an immersive WebXR session requires user interaction.
     We start this one with a simple button. -->
-<button onclick="activateXR()">Start Demo WebXR 2</button>
+<button onclick="activateXR()">Start Demo WebXR</button>
 <button onclick="activateGeolocation()">Start Demo Geolocation</button>
+
+  <div id="stabilization"></div>
 <script>
   // Add a canvas element and initialize a WebGL context that is compatible with WebXR.
   const canvas = document.querySelector("canvas");
@@ -40,12 +42,15 @@ renderer.autoClear = false;
 const camera = new THREE.PerspectiveCamera();
 camera.matrixAutoUpdate = false;
 
+const reticle = new Reticle();
+
 const scene = new THREE.Scene();
+
+scene.add(reticle);
 
 function activateGeolocation() {
   // Получение геопозиции пользователя
-  const userGPS = { longitude: 0, latitude: 0 };
-  // const userGPS = { longitude: 27.622937, latitude: 53.921424 };
+  const userGPS = { longitude: 27.622937, latitude: 53.921424 };
   // Объекты на сцене (храним их GPS-координаты)
   const placedObjects = [];
   // Функция для преобразования GPS в координаты Three.js (упрощённо)
@@ -72,9 +77,8 @@ function activateGeolocation() {
       ];
 
       // Create the cube and add it to the demo scene.
-      const cube = new THREE.Mesh(new THREE.BoxBufferGeometry(0.1, 0.1, 0.1), materials);
-      // cube.position.set(position.x, 0, position.z);
-      cube.position.set(1, 0, 1);
+      const cube = new THREE.Mesh(new THREE.BoxBufferGeometry(1, 1, 1), materials);
+      cube.position.set(position.x, 0, position.z);
       scene.add(cube);
       placedObjects.push({ object: cube, longitude, latitude });
     }
@@ -107,17 +111,39 @@ function activateGeolocation() {
   
 async function activateXR() {
 // Initialize a WebXR session using "immersive-ar".
-const session = await navigator.xr.requestSession("immersive-ar");
+const session = await navigator.xr.requestSession("immersive-ar", {
+  requiredFeatures: ["hit-test", "dom-overlay"],
+  domOverlay: { root: document.body },
+});
 session.updateRenderState({
   baseLayer: new XRWebGLLayer(session, gl)
 });
 
 // A 'local' reference space has a native origin that is located
 // near the viewer's position at the time the session was created.
-const referenceSpace = await session.requestReferenceSpace('local');
+const localReferenceSpace = await session.requestReferenceSpace('local');
+
+// Create another XRReferenceSpace that has the viewer as the origin.
+const viewerSpace = await session.requestReferenceSpace("viewer");
+// Perform hit testing using the viewer as origin.
+const hitTestSource = await session.requestHitTestSource({ space: viewerSpace });
 
 // Create a render loop that allows us to draw on the AR view.
 const onXRFrame = (time, frame) => {
+  camera.updateMatrixWorld(true);
+  const hitTestResults = frame.getHitTestResults(hitTestSource);
+  if (!this.stabilized && hitTestResults.length > 0) {
+    this.stabilized = true;
+    document.body.classList.add("stabilized");
+  }
+  if (hitTestResults.length > 0) {
+    const hitPose = hitTestResults[0].getPose(localReferenceSpace);
+
+    // update the reticle position
+    reticle.visible = true;
+    reticle.position.set(hitPose.transform.position.x, hitPose.transform.position.y, hitPose.transform.position.z)
+    reticle.updateMatrixWorld(true);
+  }
   // Queue up the next draw request.
   session.requestAnimationFrame(onXRFrame);
 
@@ -126,7 +152,7 @@ const onXRFrame = (time, frame) => {
 
   // Retrieve the pose of the device.
   // XRFrame.getViewerPose can return null while the session attempts to establish tracking.
-  const pose = frame.getViewerPose(referenceSpace);
+  const pose = frame.getViewerPose(localReferenceSpace); // ???
   if (pose) {
     // In mobile AR, we only have one view.
     const view = pose.views[0];
@@ -145,7 +171,7 @@ const onXRFrame = (time, frame) => {
 }
 session.requestAnimationFrame(onXRFrame);
 
-  addObjectAtGPS(27.622937, 53.921424);
+  addObjectAtGPS(27.621920, 53.921524);
 }
 </script>
 </body>
